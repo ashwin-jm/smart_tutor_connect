@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Dashboard</title>
+</head>
+<body>
+    <h2>Recommended Tutors</h2>
+
+    {% for tutor in tutors %}
+        <p>
+            <strong>{{ tutor.name }}</strong><br>
+            Subject: {{ tutor.subject }}<br>
+            Experience: {{ tutor.experience }} years
+        </p>
+        <hr>
+    {% endfor %}
+</body>
+</html>
