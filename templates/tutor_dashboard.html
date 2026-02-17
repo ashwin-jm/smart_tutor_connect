@@ -17,6 +17,8 @@
 
 <p><b>Student:</b> {{ r.student_name }}</p>
 <p><b>Status:</b> {{ r.status }}</p>
+<p><b>Subject:</b> {{ r.subject }}</p>
+
 
 {% if r.status == "pending" %}
 <form action="/update_request/{{ r.id }}/accepted" method="post" class="d-inline">

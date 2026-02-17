@@ -7,6 +7,16 @@
 <body>
 
 {% include "navbar.html" %}
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for msg in messages %}
+      <div class="alert alert-success text-center">
+        {{ msg }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
 
 <div class="container mt-4">
 <h3>Recommended Tutors</h3>
@@ -20,11 +30,24 @@
 <h5>{{ tutor.name }}</h5>
 <p>Subject: {{ tutor.subject }}</p>
 <p>Experience: {{ tutor.experience }} years</p>
+<p>Price/hr: ₹{{ tutor.price_per_hour }}</p>
+{% if (tutor.id, tutor.subject) in request_status %}
+<p><b>Status:</b> {{ request_status[(tutor.id, tutor.subject)] }}</p>
+{% endif %}
 
+
+
+{% if (tutor.id, tutor.subject) in requested_pairs %}
+<button class="btn btn-secondary w-100" disabled>Requested</button>
+
+{% else %}
 <form action="/request_tutor" method="post">
-<input type="hidden" name="tutor_id" value="{{ tutor.id }}">
-<button class="btn btn-primary w-100">Request Tutor</button>
+    <input type="hidden" name="tutor_id" value="{{ tutor.id }}">
+    <input type="hidden" name="subject" value="{{ tutor.subject }}">
+    <button class="btn btn-primary w-100">Request Tutor</button>
 </form>
+{% endif %}
+
 
 </div>
 </div>
