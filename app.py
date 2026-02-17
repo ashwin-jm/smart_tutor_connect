@@ -62,6 +62,8 @@ def login():
 
 @app.route("/student/dashboard")
 def student_dashboard():
+    if session.get("role") != "student":
+        return redirect("/login")
     subject = "Maths"  # Example subject; in real app, get from user input
     tutors = get_recommended_tutors(subject)
     return render_template('student_dashboard.html', tutors=tutors)
@@ -94,14 +96,20 @@ def request_tutor():
     tutor_id = request.form["tutor_id"]
 
     conn = get_db_connection()
-    conn.execute(
-        "INSERT INTO requests (student_id, tutor_id, status) VALUES (?, ?, ?)",
-        (student_id, tutor_id, "pending")
-    )
+    existing = conn.execute(
+        "SELECT * FROM requests WHERE student_id=? AND tutor_id=?",
+        (student_id, tutor_id)
+    ).fetchone()
+
+    if not existing:
+        conn.execute(
+            "INSERT INTO requests (student_id, tutor_id, status) VALUES (?, ?, ?)",
+            (student_id, tutor_id, "pending")
+        )
     conn.commit()
     conn.close()
 
-    return "Request Sent Successfully!"
+    return redirect("/student/dashboard")
 
 @app.route("/update_request/<int:req_id>/<status>", methods=["POST"])
 def update_request(req_id, status):
@@ -118,7 +126,10 @@ def update_request(req_id, status):
 
     return redirect("/tutor/dashboard")
 
-
+@app.route("/logout")
+def logout():
+    session.clear()   # removes all session data
+    return redirect("/")
 
 
 if __name__ == '__main__':
