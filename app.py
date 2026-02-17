@@ -69,7 +69,56 @@ def student_dashboard():
 
 @app.route("/tutor/dashboard")
 def tutor_dashboard():
-    return "Tutor Dashboard"
+    if session.get("role") != "tutor":
+        return redirect("/login")
+
+    tutor_id = session["user_id"]
+
+    conn = get_db_connection()
+    requests_data = conn.execute("""
+        SELECT requests.id, users.name AS student_name, requests.status
+        FROM requests
+        JOIN users ON requests.student_id = users.id
+        WHERE requests.tutor_id = ?
+    """, (tutor_id,)).fetchall()
+    conn.close()
+
+    return render_template("tutor_dashboard.html", requests=requests_data)
+
+@app.route("/request_tutor", methods=["POST"])
+def request_tutor():
+    if session.get("role") != "student":
+        return redirect("/login")
+
+    student_id = session["user_id"]
+    tutor_id = request.form["tutor_id"]
+
+    conn = get_db_connection()
+    conn.execute(
+        "INSERT INTO requests (student_id, tutor_id, status) VALUES (?, ?, ?)",
+        (student_id, tutor_id, "pending")
+    )
+    conn.commit()
+    conn.close()
+
+    return "Request Sent Successfully!"
+
+@app.route("/update_request/<int:req_id>/<status>", methods=["POST"])
+def update_request(req_id, status):
+    if session.get("role") != "tutor":
+        return redirect("/login")
+
+    conn = get_db_connection()
+    conn.execute(
+        "UPDATE requests SET status=? WHERE id=?",
+        (status, req_id)
+    )
+    conn.commit()
+    conn.close()
+
+    return redirect("/tutor/dashboard")
+
+
 
 
 if __name__ == '__main__':

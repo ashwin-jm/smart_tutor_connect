@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Student Requests</h2>
+
+        {% for r in requests %}
+        <p>
+        Student: {{ r.student_name }} <br>
+        Status: {{ r.status }}
+
+        {% if r.status == "pending" %}
+        <form action="/update_request/{{ r.id }}/accepted" method="post">
+            <button type="submit">Accept</button>
+        </form>
+
+        <form action="/update_request/{{ r.id }}/rejected" method="post">
+            <button type="submit">Decline</button>
+        </form>
+        {% endif %}
+</p>
+<hr>
+{% endfor %}
+
+</body>
+</html>

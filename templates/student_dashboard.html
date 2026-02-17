@@ -8,9 +8,14 @@
 
     {% for tutor in tutors %}
         <p>
-            <strong>{{ tutor.name }}</strong><br>
-            Subject: {{ tutor.subject }}<br>
-            Experience: {{ tutor.experience }} years
+        <b>{{ tutor.name }}</b><br>
+        Subject: {{ tutor.subject }}<br>
+        Experience: {{ tutor.experience }} years<br>
+
+        <form action="/request_tutor" method="post">
+            <input type="hidden" name="tutor_id" value="{{ tutor.id }}">
+            <button type="submit">Request Tutor</button>
+        </form>
         </p>
         <hr>
     {% endfor %}

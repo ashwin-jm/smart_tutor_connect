@@ -17,5 +17,14 @@ def init_db():
             role TEXT
         )
     """)
+
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS requests (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_id INTEGER,
+            tutor_id INTEGER,
+            status TEXT
+        )
+    """)
     conn.commit()
     conn.close()
