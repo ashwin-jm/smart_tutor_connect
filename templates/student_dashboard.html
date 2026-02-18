@@ -17,6 +17,27 @@
   {% endif %}
 {% endwith %}
 
+<div class="container mt-4">
+
+<div class="row mb-4">
+  <div class="col-md-6 offset-md-3">
+    <form method="get" class="d-flex gap-2">
+
+    <select name="subject" class="form-select">
+        <option value="">All Subjects</option>
+        <option value="Maths" {% if request.args.get('subject')=='Maths' %}selected{% endif %}>Maths</option>
+        <option value="English" {% if request.args.get('subject')=='English' %}selected{% endif %}>English</option>
+        <option value="Physics" {% if request.args.get('subject')=='Physics' %}selected{% endif %}>Physics</option>
+    </select>
+
+
+      <button class="btn btn-primary">Filter</button>
+
+    </form>
+  </div>
+</div>
+
+
 
 <div class="container mt-4">
 <h3>Recommended Tutors</h3>

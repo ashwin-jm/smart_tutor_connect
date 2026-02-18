@@ -39,6 +39,17 @@ def init_db():
         )
     """)
 
+    conn.execute("""
+    CREATE TABLE IF NOT EXISTS tutor_slots (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        tutor_id INTEGER,
+        date TEXT,
+        time_slot TEXT,
+        is_booked INTEGER
+        )
+    """)
+
+
     conn.commit()
     conn.close()
 

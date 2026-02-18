@@ -88,7 +88,8 @@ def student_dashboard():
         return redirect("/login")
     conn = get_db_connection()
 
-    tutors = get_recommended_tutors()
+    selected_subject = request.args.get("subject")
+    tutors = get_recommended_tutors(selected_subject)
 
     requested = conn.execute("""
         SELECT tutor_id, subject, status FROM requests
