@@ -30,28 +30,48 @@ def init_db():
     """)
 
     conn.execute("""
-        CREATE TABLE IF NOT EXISTS requests (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            student_id INTEGER,
-            tutor_id INTEGER,
-            subject TEXT,
-            status TEXT
+    CREATE TABLE IF NOT EXISTS slots (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        time_slot TEXT UNIQUE
         )
     """)
 
     conn.execute("""
-    CREATE TABLE IF NOT EXISTS tutor_slots (
+    CREATE TABLE IF NOT EXISTS requests (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        student_id INTEGER,
         tutor_id INTEGER,
-        date TEXT,
-        time_slot TEXT,
-        is_booked INTEGER
+        subject TEXT,
+        slot_id INTEGER,
+        status TEXT
         )
     """)
 
 
+
     conn.commit()
     conn.close()
+
+def seed_slots():
+    conn = get_db_connection()
+
+    slots = [
+        "09:00-10:00",
+        "10:00-11:00",
+        "11:00-12:00",
+        "14:00-15:00",
+        "15:00-16:00"
+    ]
+
+    for s in slots:
+        conn.execute(
+            "INSERT OR IGNORE INTO slots (time_slot) VALUES (?)",
+            (s,)
+        )
+
+    conn.commit()
+    conn.close()
+
 
 
 

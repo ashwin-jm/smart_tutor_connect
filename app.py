@@ -1,11 +1,12 @@
 from flask import Flask, render_template, redirect, request, session, flash
 from matching import get_recommended_tutors
-from db import init_db, get_db_connection
+from db import init_db, get_db_connection, seed_slots
 
 app = Flask(__name__)
 app.secret_key = "smart_tutor_secret_key"
 
 init_db()
+seed_slots()
 
 @app.route('/')
 def home():
@@ -96,6 +97,14 @@ def student_dashboard():
         WHERE student_id=?
     """, (session["user_id"],)).fetchall()
 
+    slots = conn.execute("""
+    SELECT * FROM slots
+    WHERE id NOT IN (
+        SELECT slot_id FROM requests WHERE status='accepted'
+        )
+    """).fetchall()
+
+
     conn.close()
 
     requested_pairs = [(r["tutor_id"], r["subject"]) for r in requested]
@@ -105,7 +114,8 @@ def student_dashboard():
         "student_dashboard.html",
         tutors=tutors,
         requested_pairs=requested_pairs,
-        request_status = request_status
+        request_status = request_status,
+        slots = slots
     )
 
 
@@ -122,9 +132,11 @@ def tutor_dashboard():
             SELECT requests.id,
                 users.name AS student_name,
                 requests.subject,
+                slots.time_slot,
                 requests.status
             FROM requests
             JOIN users ON requests.student_id = users.id
+            JOIN slots ON requests.slot_id = slots.id
             WHERE requests.tutor_id = ?
         """, (tutor_id,)).fetchall()
 
@@ -141,6 +153,7 @@ def request_tutor():
     student_id = session["user_id"]
     tutor_id = request.form.get("tutor_id")
     subject = request.form.get("subject")
+    slot_id = request.form.get("slot_id")
 
     conn = get_db_connection()
 
@@ -153,9 +166,9 @@ def request_tutor():
         flash("You have already requested this tutor for this subject.")
     else:
         conn.execute("""
-            INSERT INTO requests (student_id, tutor_id, subject, status)
-            VALUES (?, ?, ?, ?)
-        """, (student_id, tutor_id, subject, "pending"))
+            INSERT INTO requests (student_id, tutor_id, subject, slot_id, status)
+            VALUES (?, ?, ?, ?, ?)
+        """, (student_id, tutor_id, subject, slot_id, "pending"))
         flash("Tutor request sent successfully!")
 
     conn.commit()
