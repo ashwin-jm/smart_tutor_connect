@@ -5,7 +5,7 @@ def get_recommended_tutors(subject=None):
 
     if subject:
         tutors = conn.execute("""
-            SELECT users.id, users.name,
+            SELECT users.id, users.name, users.email,
                    tutor_profiles.subject,
                    tutor_profiles.experience,
                    tutor_profiles.price_per_hour
@@ -16,7 +16,7 @@ def get_recommended_tutors(subject=None):
         """, (subject,)).fetchall()
     else:
         tutors = conn.execute("""
-            SELECT users.id, users.name,
+            SELECT users.id, users.name, users.email,
                    tutor_profiles.subject,
                    tutor_profiles.experience,
                    tutor_profiles.price_per_hour

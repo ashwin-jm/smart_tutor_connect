@@ -57,6 +57,15 @@
 <!-- Show Status -->
 {% if (tutor.id, tutor.subject) in request_status %}
 <p><b>Status:</b> {{ request_status[(tutor.id, tutor.subject)] }}</p>
+{% if request_status[(tutor.id, tutor.subject)] == "accepted" %}
+<div class="alert alert-success mt-2">
+<b>Tutor Email:</b> {{ tutor.email }}
+</div>
+{% else %}
+<p class="text-muted">
+Contact details will be shared after acceptance.
+</p>
+{% endif %}
 {% endif %}
 
 <!-- Request Button / Requested -->
