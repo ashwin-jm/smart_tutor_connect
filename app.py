@@ -198,6 +198,41 @@ def logout():
     session.clear()   # removes all session data
     return redirect("/")
 
+@app.route("/rate_tutor", methods=["POST"])
+def rate_tutor():
+
+    if session.get("role") != "student":
+        return redirect("/login")
+
+    student_id = session["user_id"]
+    tutor_id = request.form.get("tutor_id")
+    rating = request.form.get("rating")
+
+    conn = get_db_connection()
+
+    existing = conn.execute("""
+        SELECT * FROM ratings
+        WHERE student_id=? AND tutor_id=?
+    """, (student_id, tutor_id)).fetchone()
+
+    if existing:
+        conn.execute("""
+            UPDATE ratings
+            SET rating=?
+            WHERE student_id=? AND tutor_id=?
+        """, (rating, student_id, tutor_id))
+        flash("Rating updated successfully!")
+    else:
+        conn.execute("""
+            INSERT INTO ratings (student_id, tutor_id, rating)
+            VALUES (?, ?, ?)
+        """, (student_id, tutor_id, rating))
+        flash("Rating submitted successfully!")
+
+    conn.commit()
+    conn.close()
+
+    return redirect("/student/dashboard")
 
 if __name__ == '__main__':
     app.run(debug=True)

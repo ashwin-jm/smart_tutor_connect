@@ -53,20 +53,45 @@
 <p><b>Subject:</b> {{ tutor.subject }}</p>
 <p><b>Experience:</b> {{ tutor.experience }} years</p>
 <p><b>Price/hr:</b> ₹{{ tutor.price_per_hour }}</p>
+<p><b>Rating:</b> {{ tutor.avg_rating or "Not rated yet" }}</p>
 
 <!-- Show Status -->
 {% if (tutor.id, tutor.subject) in request_status %}
 <p><b>Status:</b> {{ request_status[(tutor.id, tutor.subject)] }}</p>
+
 {% if request_status[(tutor.id, tutor.subject)] == "accepted" %}
+
 <div class="alert alert-success mt-2">
 <b>Tutor Email:</b> {{ tutor.email }}
 </div>
+
 {% if tutor.demo_link %}
 <a href="{{ tutor.demo_link }}" target="_blank"
 class="btn btn-outline-success w-100 mt-2">
 Get Demo
 </a>
 {% endif %}
+
+<!-- Rating Form -->
+<form action="/rate_tutor" method="post" class="mt-2">
+
+<input type="hidden" name="tutor_id" value="{{ tutor.id }}">
+
+<select name="rating" class="form-select mb-2" required>
+  <option value="">Rate Tutor</option>
+  <option value="1">1</option>
+  <option value="2">2</option>
+  <option value="3">3</option>
+  <option value="4">4</option>
+  <option value="5">5</option>
+</select>
+
+<button class="btn btn-warning w-100">
+Submit Rating
+</button>
+
+</form>
+
 {% else %}
 <p class="text-muted">
 Contact details will be shared after acceptance.
@@ -77,7 +102,7 @@ Contact details will be shared after acceptance.
 <!-- Request Button / Requested -->
 {% if (tutor.id, tutor.subject) in requested_pairs %}
 
-<button class="btn btn-secondary w-100" disabled>Requested</button>
+<button class="btn btn-secondary w-100 mt-2" disabled>Requested</button>
 
 {% else %}
 

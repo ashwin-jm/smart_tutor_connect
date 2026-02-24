@@ -48,6 +48,15 @@ def init_db():
         )
     """)
 
+    conn.execute("""
+    CREATE TABLE IF NOT EXISTS ratings (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        student_id INTEGER,
+        tutor_id INTEGER,
+        rating INTEGER
+    )
+    """)
+
 
 
     conn.commit()
