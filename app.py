@@ -41,13 +41,14 @@ def register(role):
             subjects = request.form.getlist("subject")
             experience = request.form.getlist("experience")
             prices = request.form.getlist("price")
+            demo_link = request.form.getlist("demo_link")
 
             for i in range(len(subjects)):
                 conn.execute("""
                     INSERT INTO tutor_profiles 
-                    (user_id, subject, experience, price_per_hour)
-                    VALUES (?, ?, ?, ?)
-                """, (user_id, subjects[i], experience[i], prices[i]))
+                    (user_id, subject, experience, price_per_hour, demo_link)
+                    VALUES (?, ?, ?, ?, ?)
+                """, (user_id, subjects[i], experience[i], prices[i], demo_link[i]))
 
         conn.commit()
         conn.close()

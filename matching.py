@@ -8,7 +8,8 @@ def get_recommended_tutors(subject=None):
             SELECT users.id, users.name, users.email,
                    tutor_profiles.subject,
                    tutor_profiles.experience,
-                   tutor_profiles.price_per_hour
+                   tutor_profiles.price_per_hour,
+                   tutor_profiles.demo_link
             FROM users
             JOIN tutor_profiles
             ON users.id = tutor_profiles.user_id
@@ -19,7 +20,8 @@ def get_recommended_tutors(subject=None):
             SELECT users.id, users.name, users.email,
                    tutor_profiles.subject,
                    tutor_profiles.experience,
-                   tutor_profiles.price_per_hour
+                   tutor_profiles.price_per_hour,
+                    tutor_profiles.demo_link
             FROM users
             JOIN tutor_profiles
             ON users.id = tutor_profiles.user_id

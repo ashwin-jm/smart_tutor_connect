@@ -61,6 +61,12 @@
 <div class="alert alert-success mt-2">
 <b>Tutor Email:</b> {{ tutor.email }}
 </div>
+{% if tutor.demo_link %}
+<a href="{{ tutor.demo_link }}" target="_blank"
+class="btn btn-outline-success w-100 mt-2">
+Get Demo
+</a>
+{% endif %}
 {% else %}
 <p class="text-muted">
 Contact details will be shared after acceptance.

@@ -25,7 +25,8 @@ def init_db():
             user_id INTEGER,
             subject TEXT,
             experience INTEGER,
-            price_per_hour INTEGER
+            price_per_hour INTEGER,
+            demo_link TEXT
         )
     """)
 
