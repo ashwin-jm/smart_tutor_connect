@@ -234,5 +234,77 @@ def rate_tutor():
 
     return redirect("/student/dashboard")
 
+@app.route("/admin", methods=["GET", "POST"])
+def admin_login():
+
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+
+        if username == "admin" and password == "admin@123":
+            session["admin"] = True
+            return redirect("/admin/dashboard")
+        else:
+            return "Invalid admin credentials"
+
+    return render_template("admin_login.html")
+
+@app.route("/admin/dashboard")
+def admin_dashboard():
+
+    if not session.get("admin"):
+        return redirect("/admin")
+
+    conn = get_db_connection()
+
+    students = conn.execute("""
+        SELECT * FROM users WHERE role='student'
+    """).fetchall()
+
+    tutors = conn.execute("""
+        SELECT * FROM users WHERE role='tutor'
+    """).fetchall()
+
+    conn.close()
+
+    return render_template(
+        "admin_dashboard.html",
+        students=students,
+        tutors=tutors
+    )
+
+@app.route("/admin/search", methods=["POST"])
+def admin_search():
+
+    if not session.get("admin"):
+        return redirect("/admin")
+
+    email = request.form["email"]
+
+    conn = get_db_connection()
+
+    user = conn.execute("""
+        SELECT * FROM users WHERE email=?
+    """, (email,)).fetchone()
+
+    conn.close()
+
+    return render_template("admin_dashboard.html", search_user=user)
+
+@app.route("/admin/delete/<int:user_id>")
+def delete_user(user_id):
+
+    if not session.get("admin"):
+        return redirect("/admin")
+
+    conn = get_db_connection()
+
+    conn.execute("DELETE FROM users WHERE id=?", (user_id,))
+    conn.commit()
+
+    conn.close()
+
+    return redirect("/admin/dashboard")
+
 if __name__ == '__main__':
     app.run(debug=True)
