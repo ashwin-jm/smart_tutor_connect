@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Dashboard</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-4">
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Admin Dashboard</h2>
+    <a href="/admin/logout" class="btn btn-danger">Logout</a>
+</div>
+
+<hr>
+
+<h4>Search User</h4>
+
+<form action="/admin/search" method="post" class="mb-4">
+<input class="form-control mb-2" name="email" placeholder="Enter email">
+<button class="btn btn-primary">Search</button>
+</form>
+
+{% if search_user %}
+<div class="alert alert-info">
+User Found: {{ search_user.name }} ({{ search_user.email }})
+<a href="/admin/delete/{{ search_user.id }}" class="btn btn-danger btn-sm">Delete</a>
+</div>
+{% endif %}
+
+<hr>
+
+<h3>Students</h3>
+
+<table class="table table-bordered">
+
+<tr>
+<th>Name</th>
+<th>Email</th>
+<th>Action</th>
+</tr>
+
+{% for s in students %}
+<tr>
+<td>{{ s.name }}</td>
+<td>{{ s.email }}</td>
+<td>
+<a href="/admin/delete/{{ s.id }}" class="btn btn-danger btn-sm">
+Delete
+</a>
+</td>
+</tr>
+{% endfor %}
+
+</table>
+
+<hr>
+
+<h3>Tutors</h3>
+
+<table class="table table-bordered">
+
+<tr>
+<th>Name</th>
+<th>Email</th>
+<th>Action</th>
+</tr>
+
+{% for t in tutors %}
+<tr>
+<td>{{ t.name }}</td>
+<td>{{ t.email }}</td>
+<td>
+<a href="/admin/delete/{{ t.id }}" class="btn btn-danger btn-sm">
+Delete
+</a>
+</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+
+</body>
+</html>

@@ -306,5 +306,10 @@ def delete_user(user_id):
 
     return redirect("/admin/dashboard")
 
+@app.route("/admin/logout")
+def admin_logout():
+    session.pop("admin", None)
+    return redirect("/admin")
+
 if __name__ == '__main__':
     app.run(debug=True)
